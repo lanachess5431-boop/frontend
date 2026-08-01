@@ -11,7 +11,7 @@
 
   /* ---------------- page navigation ---------------- */
 
-  const pages = ["page-envelope", "page-1", "page-2", "page-3", "page-4"];
+  const pages = ["page-envelope", "page-1", "page-2", "page-pin", "page-3", "page-4"];
   const dots = document.querySelectorAll("#dots span");
 
   function goTo(id) {
@@ -36,7 +36,8 @@
   });
 
   document.getElementById("no-1").addEventListener("click", () => goTo("page-2"));
-  document.getElementById("yes-2").addEventListener("click", () => goTo("page-3"));
+  document.getElementById("yes-2").addEventListener("click", () => goTo("page-pin"));
+  document.getElementById("yes-pin").addEventListener("click", () => goTo("page-3"));
 
   /* ---------------- the button that cannot be caught ---------------- */
 
@@ -124,6 +125,13 @@
     ["that's not a real option.", "wrong button.", "try the other one 👉", "I already know the answer, just click Yes.", "we both know where this is going."]
   );
 
+  makeUncatchable(
+    document.getElementById("no-pin"),
+    document.getElementById("stage-pin"),
+    document.getElementById("caption-pin"),
+    ["mm, no.", "try again.", "we both know you did 👀", "the Yes button is right there.", "not accepting that answer."]
+  );
+
   /* ---------------- feedback form ---------------- */
 
   const form = document.getElementById("feedback-form");
@@ -175,6 +183,7 @@
       name: "Sanghmitra",
       angryAnswer: "no",
       likeAnswer: "yes",
+      pinAnswer: "yes",
       liked,
       disliked,
       extra,
