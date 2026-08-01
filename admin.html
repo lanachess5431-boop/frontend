@@ -70,6 +70,11 @@
 
 <script>
 (() => {
+  // Backend is a separate Render service from this static site — point at its URL.
+  const API_BASE = location.hostname === "localhost" || location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : "https://love-y09o.onrender.com";
+
   const gate = document.getElementById("gate");
   const keyInput = document.getElementById("key-input");
   const unlockBtn = document.getElementById("unlock-btn");
@@ -124,7 +129,7 @@
     statusEl.textContent = "Loading…";
     statusEl.classList.remove("error");
     try {
-      const res = await fetch(`/api/feedback?key=${encodeURIComponent(key)}`);
+      const res = await fetch(`${API_BASE}/api/feedback?key=${encodeURIComponent(key)}`);
       const data = await res.json();
       if (!res.ok || !data.ok) {
         throw new Error(data.error || "request failed");

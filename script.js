@@ -1,6 +1,12 @@
 (() => {
   "use strict";
 
+  // Backend is a separate Render service from this static site — point at its URL.
+  // Localhost keeps working against a locally-running backend on port 3000.
+  const API_BASE = location.hostname === "localhost" || location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : "https://love-y09o.onrender.com";
+
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------- page navigation ---------------- */
@@ -176,7 +182,7 @@
     };
 
     try {
-      const res = await fetch("/api/feedback", {
+      const res = await fetch(`${API_BASE}/api/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
