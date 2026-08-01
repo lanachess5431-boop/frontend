@@ -1,0 +1,410 @@
+/* ---------------------------------------------------------
+   For Sanghmitra — a little letter of a website
+   Theme: candlelit letter paper. Wine + muted gold on blush
+   paper (light) / deep aubergine on warm parchment ink (dark).
+--------------------------------------------------------- */
+
+:root {
+  --bg: #f3e8e4;
+  --bg-2: #ecdad8;
+  --paper: #fbf4f0;
+  --ink: #2b1b22;
+  --ink-soft: #7a6169;
+  --accent: #7a2048;
+  --accent-strong: #5c1636;
+  --accent-2: #b8863b;
+  --line: rgba(122, 32, 72, 0.16);
+  --shadow: 0 30px 60px -25px rgba(90, 25, 55, 0.35), 0 2px 8px rgba(90, 25, 55, 0.08);
+  --radius: 22px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #190f20;
+    --bg-2: #24162c;
+    --paper: #251829;
+    --ink: #f3e3e9;
+    --ink-soft: #c6a9b7;
+    --accent: #e9a9c9;
+    --accent-strong: #f5c4dc;
+    --accent-2: #dcae57;
+    --line: rgba(233, 169, 201, 0.2);
+    --shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(120% 140% at 15% 0%, var(--bg-2), var(--bg) 60%);
+  color: var(--ink);
+  font-family: Optima, Candara, "Noto Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.font-display {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+}
+
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+}
+
+.card {
+  position: relative;
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  padding: 44px 40px 36px;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) - 10px);
+  pointer-events: none;
+}
+
+.stamp {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  width: 46px;
+  height: 46px;
+  border: 1.5px dashed var(--line);
+  border-radius: 8px;
+  transform: rotate(7deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  height: 8px;
+}
+
+.dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.dots span.active {
+  background: var(--accent-2);
+  transform: scale(1.2);
+}
+
+.dots[hidden] { display: none; }
+
+.eyebrow {
+  display: block;
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.page h1 {
+  font-size: clamp(28px, 6vw, 36px);
+  line-height: 1.15;
+  margin: 0 0 10px;
+  color: var(--accent-strong);
+  text-wrap: balance;
+  font-weight: 500;
+}
+
+.page h2.question {
+  font-family: inherit;
+  font-style: normal;
+  font-size: clamp(19px, 4.4vw, 22px);
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 30px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.page p.lede {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 28px;
+  max-width: 44ch;
+}
+
+/* ---------- pages ---------- */
+
+.page {
+  display: none;
+}
+
+.page.visible {
+  display: block;
+  animation: page-in 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- envelope ---------- */
+
+#page-envelope .envelope-art {
+  width: 100%;
+  max-width: 220px;
+  margin: 6px auto 30px;
+  aspect-ratio: 3 / 2;
+  position: relative;
+}
+
+.envelope-body {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--bg-2), var(--paper));
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 58%;
+  background: linear-gradient(160deg, var(--accent), var(--accent-strong));
+  clip-path: polygon(0 0, 100% 0, 50% 68%);
+  border-radius: 10px 10px 0 0;
+  transform-origin: top center;
+  transition: transform 0.7s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.envelope-heart {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  color: var(--accent-2);
+}
+
+#page-envelope.opening .envelope-flap {
+  transform: rotateX(180deg) translateY(-2px);
+}
+
+.page.center { text-align: center; }
+
+/* ---------- buttons ---------- */
+
+.actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.page.center .actions { justify-content: center; }
+
+.btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  font-size: 15.5px;
+  padding: 13px 26px;
+  border-radius: 999px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--paper);
+  box-shadow: 0 10px 22px -10px var(--accent);
+}
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+}
+.btn-ghost:hover { background: var(--bg-2); }
+
+.stage {
+  position: relative;
+  min-height: 150px;
+}
+
+@media (min-width: 480px) {
+  .stage { min-height: 120px; }
+}
+
+.stage .btn-dodge {
+  position: absolute;
+  z-index: 2;
+}
+
+.stage .btn-anchor {
+  position: relative;
+  z-index: 1;
+}
+
+.dodge-caption {
+  margin-top: 14px;
+  min-height: 20px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* ---------- form ---------- */
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.field textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 68px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--bg-2);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  padding: 12px 14px;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.field textarea::placeholder { color: var(--ink-soft); opacity: 0.7; }
+
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--paper);
+}
+
+.form-note {
+  font-size: 13px;
+  color: var(--ink-soft);
+  min-height: 18px;
+  margin: -6px 0 18px;
+}
+
+.form-note.error { color: var(--accent); }
+
+.btn-submit {
+  width: 100%;
+  font-size: 16px;
+  padding: 15px 26px;
+}
+
+.btn-submit[disabled] {
+  opacity: 0.7;
+  cursor: default;
+  transform: none !important;
+}
+
+/* ---------- thank you ---------- */
+
+.receipt {
+  margin-top: 22px;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  background: var(--bg-2);
+}
+
+.receipt .r-row {
+  margin-bottom: 14px;
+}
+.receipt .r-row:last-child { margin-bottom: 0; }
+
+.receipt .r-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.receipt .r-value {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.signoff {
+  margin-top: 26px;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+@media (max-width: 420px) {
+  .card { padding: 36px 22px 28px; }
+}

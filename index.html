@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>For Sanghmitra</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='26'%3E%F0%9F%A4%8D%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrap">
+  <div class="card" id="card">
+    <div class="stamp">🤍</div>
+    <div class="dots" id="dots">
+      <span data-step="1"></span>
+      <span data-step="2"></span>
+      <span data-step="3"></span>
+      <span data-step="4"></span>
+    </div>
+
+    <!-- ENVELOPE -->
+    <section class="page center visible" id="page-envelope">
+      <span class="eyebrow">sealed with a little nervousness</span>
+      <h1 class="font-display">For Sanghmitra</h1>
+      <div class="envelope-art" id="envelope-art">
+        <div class="envelope-body"></div>
+        <div class="envelope-heart">🤍</div>
+        <div class="envelope-flap"></div>
+      </div>
+      <p class="lede" style="margin-left:auto;margin-right:auto;">I made you something. It'll only take a minute.</p>
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-open">Open it ✉️</button>
+      </div>
+    </section>
+
+    <!-- PAGE 1: angry -->
+    <section class="page" id="page-1">
+      <span class="eyebrow">step 1</span>
+      <h1 class="font-display">Hii Sanghmitra</h1>
+      <h2 class="question">Are you still angry with me?</h2>
+      <div class="stage" id="stage-1">
+        <button class="btn btn-ghost btn-anchor" id="no-1">No</button>
+        <button class="btn btn-primary btn-anchor" id="yes-1">Yes</button>
+      </div>
+      <div class="dodge-caption" id="caption-1"></div>
+    </section>
+
+    <!-- PAGE 2: like -->
+    <section class="page" id="page-2">
+      <span class="eyebrow">step 2</span>
+      <h1 class="font-display">Okay, one more question</h1>
+      <h2 class="question">Do you like me… even just a tiny bit? 🥺</h2>
+      <div class="stage" id="stage-2">
+        <button class="btn btn-primary btn-anchor" id="yes-2">Yes</button>
+        <button class="btn btn-ghost btn-anchor" id="no-2">No</button>
+      </div>
+      <div class="dodge-caption" id="caption-2"></div>
+    </section>
+
+    <!-- PAGE 3: feedback form -->
+    <section class="page" id="page-3">
+      <span class="eyebrow">step 3</span>
+      <h1 class="font-display">Alright, now really talk to me</h1>
+      <p class="lede">Say whatever you want — I'm listening, no judgment.</p>
+      <form id="feedback-form">
+        <div class="field">
+          <label for="liked">Something you like about me (or about us)</label>
+          <textarea id="liked" placeholder="…"></textarea>
+        </div>
+        <div class="field">
+          <label for="disliked">Something you don't like, or wish were different</label>
+          <textarea id="disliked" placeholder="…"></textarea>
+        </div>
+        <div class="field">
+          <label for="extra">Anything else on your mind? <span style="text-transform:none;">(optional)</span></label>
+          <textarea id="extra" placeholder="…"></textarea>
+        </div>
+        <div class="form-note" id="form-note"></div>
+        <button type="submit" class="btn btn-primary btn-submit" id="btn-submit">Send it to him 💌</button>
+      </form>
+    </section>
+
+    <!-- PAGE 4: thank you -->
+    <section class="page" id="page-4">
+      <span class="eyebrow">step 4</span>
+      <h1 class="font-display">Got it. 🤍</h1>
+      <p class="lede">Thank you for trusting me with that. I mean it.</p>
+      <div class="receipt" id="receipt"></div>
+      <p class="signoff">— from him, with love.</p>
+    </section>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

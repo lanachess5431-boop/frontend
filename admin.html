@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Her answers — admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='26'%3E%F0%9F%94%92%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  body { align-items: flex-start; padding: 48px 16px; }
+  .admin-wrap { position: relative; z-index: 1; width: 100%; max-width: 640px; margin: 0 auto; }
+  .admin-head { margin-bottom: 28px; }
+  .admin-head h1 {
+    font-size: 26px; margin: 0 0 6px; color: var(--accent-strong);
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif; font-style: italic; font-weight: 500;
+  }
+  .admin-head p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
+
+  .gate {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
+    padding: 22px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+  .gate input {
+    flex: 1; min-width: 180px; font: inherit; font-size: 14.5px; padding: 11px 14px;
+    border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg-2); color: var(--ink);
+  }
+  .gate input:focus { outline: none; border-color: var(--accent); }
+
+  .status-line { margin: 14px 2px; font-size: 13.5px; color: var(--ink-soft); }
+  .status-line.error { color: var(--accent); }
+
+  .entries { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+  .entry {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px;
+  }
+  .entry .meta {
+    display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px;
+    font-size: 12px; letter-spacing: 0.04em; color: var(--ink-soft);
+  }
+  .entry .meta .badges span {
+    display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px;
+    background: var(--bg-2); font-weight: 600;
+  }
+  .entry .row { margin-bottom: 10px; }
+  .entry .row:last-child { margin-bottom: 0; }
+  .entry .label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft);
+    font-weight: 600; margin-bottom: 3px;
+  }
+  .entry .value { font-size: 14.5px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="admin-wrap">
+  <div class="admin-head">
+    <h1>Her answers</h1>
+    <p>Private view — only visible with your admin key.</p>
+  </div>
+
+  <div class="gate" id="gate">
+    <input type="password" id="key-input" placeholder="Admin key" autocomplete="off" />
+    <button class="btn btn-primary" id="unlock-btn">Unlock</button>
+  </div>
+
+  <div class="status-line" id="status"></div>
+  <div class="entries" id="entries" hidden></div>
+</div>
+
+<script>
+(() => {
+  const gate = document.getElementById("gate");
+  const keyInput = document.getElementById("key-input");
+  const unlockBtn = document.getElementById("unlock-btn");
+  const statusEl = document.getElementById("status");
+  const entriesEl = document.getElementById("entries");
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[c]));
+  }
+
+  function render(entries) {
+    entriesEl.hidden = entries.length === 0;
+    if (entries.length === 0) {
+      statusEl.textContent = "No answers yet — send her the link.";
+      statusEl.classList.remove("error");
+      return;
+    }
+    statusEl.textContent = `${entries.length} response${entries.length === 1 ? "" : "s"}.`;
+    statusEl.classList.remove("error");
+
+    entriesEl.innerHTML = entries.map((e) => {
+      const when = new Date(e.submittedAt).toLocaleString();
+      const rows = [
+        ["Likes", e.liked],
+        ["Would change", e.disliked],
+        ["Also said", e.extra],
+      ].filter(([, v]) => v && v.trim());
+
+      return `
+        <div class="entry">
+          <div class="meta">
+            <span>${escapeHtml(when)}</span>
+            <span class="badges">
+              <span>angry: ${e.angryAnswer === "yes" ? "yes" : "no"}</span>
+              <span>likes him: ${e.likeAnswer === "yes" ? "yes" : "no"}</span>
+            </span>
+          </div>
+          ${rows.map(([label, value]) => `
+            <div class="row">
+              <div class="label">${escapeHtml(label)}</div>
+              <div class="value">${escapeHtml(value)}</div>
+            </div>
+          `).join("") || '<div class="value" style="color:var(--ink-soft)">(no text left)</div>'}
+        </div>
+      `;
+    }).join("");
+  }
+
+  async function load(key) {
+    statusEl.textContent = "Loading…";
+    statusEl.classList.remove("error");
+    try {
+      const res = await fetch(`/api/feedback?key=${encodeURIComponent(key)}`);
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "request failed");
+      }
+      sessionStorage.setItem("adminKey", key);
+      gate.hidden = true;
+      render(data.entries);
+    } catch (err) {
+      statusEl.textContent = "Couldn't unlock — check the key and try again.";
+      statusEl.classList.add("error");
+    }
+  }
+
+  unlockBtn.addEventListener("click", () => {
+    const key = keyInput.value.trim();
+    if (key) load(key);
+  });
+  keyInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") unlockBtn.click();
+  });
+
+  const saved = sessionStorage.getItem("adminKey");
+  if (saved) {
+    keyInput.value = saved;
+    load(saved);
+  }
+})();
+</script>
+</body>
+</html>
